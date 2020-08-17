@@ -7,19 +7,18 @@ use App\classes\Logger;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Routing\Annotation\Route;
 
-class LearningController extends AbstractController
+class HomeController extends AbstractController
 {
     /**
      * @Route("/", name="DI")
      * @param FormBuilderInterface $builder
-     * @param array $options
      * @return Response
      */
-    public function buildForm(FormBuilderInterface $builder, array $options): Response
+    public function buildForm(FormBuilderInterface $builder): Response
     {
-
         $builder
             ->add('input', TextType::class)
             ->add('choice', ChoiceType::class, [
@@ -37,7 +36,7 @@ class LearningController extends AbstractController
             'data_class' => Logger::class,
         ]);
     }
-//return $this->render('learning/index.html.twig', ['controller_name' => 'LearningController',]);
+//return $this->render('learning/index.html.twig', ['controller_name' => 'HomeController',]);
 }
 
 
