@@ -1,14 +1,12 @@
 <?php
 declare(strict_types=1);
 
-namespace App\classes;
-
-use Transform;
+namespace App\Entity;
 
 class Capitalize implements Transform
 {
     public function transform(string $string): string
     {
-        return preg_replace_callback('/(\w)(.?)/', fn($words) => strtoupper($words[2] . $words[1]), $string);
+        return preg_replace_callback('/(\w)(.?)/', fn($string) => strtoupper($string[2] . $string[1]), $string);
     }
 }

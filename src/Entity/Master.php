@@ -3,15 +3,18 @@ declare(strict_types=1);
 
 namespace App\Entity;
 
+use Monolog\Logger;
+
 class Master
 {
     private int $id;
     private string $message;
 
-    public function __construct(int $id, string $message)
+    public function __construct(string $input, Transform $transform, Logger $logger)
     {
-        $this->id = $id;
-        $this->message = $message;
+        $logger->info($input);
+        $transformedInput = $transform->transform($input);
+        $this->message = $transformedInput;
     }
 
     public function getId(): int

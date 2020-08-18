@@ -1,11 +1,9 @@
 <?php
 declare(strict_types=1);
 
-namespace App\classes;
+namespace App\Entity;
 
-use Transform;
-
-class Transformer implements Transform
+class Dash implements Transform
 {
     public function transform(string $string): string
     {

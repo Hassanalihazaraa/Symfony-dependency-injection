@@ -3,40 +3,43 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
-use App\classes\Logger;
+use App\Entity\Capitalize;
+use App\Entity\Dash;
+use App\Entity\Master;
+use Monolog\Handler\StreamHandler;
+use Monolog\Logger;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Routing\Annotation\Route;
 
 class HomeController extends AbstractController
 {
     /**
-     * @Route("/", name="DI")
-     * @param FormBuilderInterface $builder
+     * @Route("/", name="home")
+     * @param Request $request
      * @return Response
      */
-    public function buildForm(FormBuilderInterface $builder): Response
+    public function index(Request $request): Response
     {
-        $builder
-            ->add('input', TextType::class)
-            ->add('choice', ChoiceType::class, [
-                'choices' => [
-                    'Capitalize' => 'capitalize',
-                    'change space with dash' => 'dash'
-                ]
-            ])
-            ->add('save', SubmitType::class);
-    }
+        if ($request->request->get('form')) {
+            $transform = $request->request->get('form')['select'];
+            $input = $request->request->get('form')['message'];
+            $logger = new Logger('message');
+            $streamHandler = new StreamHandler(__DIR__ . '/../../log/log.info', Logger::INFO);
+            $logger->pushHandler($streamHandler);
+            if ($transform === 'Capitalize') {
+                $transformed = new Capitalize();
+            } else {
+                $transformed = new Dash();
+            }
+            $master = new Master($input, $transformed, $logger);
+        }
 
-    public function configureOptions(OptionsResolver $resolver)
-    {
-        $resolver->setDefaults([
-            'data_class' => Logger::class,
-        ]);
+        $form = $this->createForm(Form::class);
+        return $this->render('Homepage/index.html.twig', [
+            'form' => $form->createView(),
+            'message' => $master->getMessage()]);
     }
-//return $this->render('learning/index.html.twig', ['controller_name' => 'HomeController',]);
 }
-
 
